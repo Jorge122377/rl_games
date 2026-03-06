@@ -99,13 +99,19 @@ class QLearningAgent:
             total_reward = 0.0
             done = False
 
+            # Environment loop
             while not done:
+                # Select action
                 action = self.select_action(state)
+                # Take action
                 next_obs, reward, terminated, truncated, _ = env.step(action)
-                done = terminated or truncated
+                # Update state
                 next_state = self.discretize(next_obs)
+                # Update Q-table
                 self._update(state, action, reward, next_state, done)
+                # Update state
                 state = next_state
+                # Update total reward
                 total_reward += reward
 
             self.epsilon = max(self.epsilon_end, self.epsilon * self.epsilon_decay)

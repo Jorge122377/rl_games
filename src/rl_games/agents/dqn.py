@@ -25,20 +25,9 @@ import torch.optim as optim
 
 
 class QNetwork(nn.Module):
-    """Two hidden-layer MLP that outputs Q-values for each discrete action."""
+    # TODO: Implement the QNetwork
 
-    def __init__(self, state_dim: int, action_dim: int, hidden: int = 128) -> None:
-        super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(state_dim, hidden),
-            nn.ReLU(),
-            nn.Linear(hidden, hidden),
-            nn.ReLU(),
-            nn.Linear(hidden, action_dim),
-        )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.net(x)
+    pass
 
 
 # ── Replay buffer ────────────────────────────────────────────────────
@@ -180,12 +169,19 @@ class DQNAgent:
             total_reward = 0.0
             done = False
 
+            # Environment loop
             while not done:
+                # Select action
                 action = self.select_action(obs)
+                # Take action
                 next_obs, reward, terminated, truncated, _ = env.step(action)
+                # Update state
                 done = terminated or truncated
+                # Update buffer
                 self.buffer.push(obs, action, float(reward), next_obs, done)
+                # Update Q-network
                 self._learn()
+                # Update state and total reward
                 obs = next_obs
                 total_reward += reward
 
