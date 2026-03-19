@@ -25,9 +25,20 @@ import torch.optim as optim
 
 
 class QNetwork(nn.Module):
-    # TODO: Implement the QNetwork
+    """Small MLP that maps state -> Q-values for each action."""
 
-    pass
+    def __init__(self, state_dim: int, action_dim: int, hidden: int = 128) -> None:
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, action_dim),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.net(x)
 
 
 # ── Replay buffer ────────────────────────────────────────────────────
